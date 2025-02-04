@@ -135,15 +135,23 @@
   <ItemGroup>
     <ClCompile Include="AppValidationLayersAndExtensions.cpp" />
     <ClCompile Include="Device.cpp" />
+    <ClCompile Include="DrawCommandBuffer.cpp" />
+    <ClCompile Include="RenderPass.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="source.cpp" />
     <ClCompile Include="SwapChain.cpp" />
+    <ClCompile Include="Tools.cpp" />
     <ClCompile Include="VulkanContext.cpp" />
     <ClCompile Include="VulkanInstance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppValidationLayersAndExtensions.h" />
     <ClInclude Include="Device.h" />
+    <ClInclude Include="DrawCommandBuffer.h" />
+    <ClInclude Include="RenderPass.h" />
+    <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="SwapChain.h" />
+    <ClInclude Include="Tools.h" />
     <ClInclude Include="VulkanContext.h" />
     <ClInclude Include="VulkanInstance.h" />
   </ItemGroup>

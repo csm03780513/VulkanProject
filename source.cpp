@@ -19,7 +19,11 @@ VulkanContext::getInstance()->initVulkan(window);
 
 while (!glfwWindowShouldClose(window)) {
 
+    VulkanContext::getInstance()->drawBegin();
 
+    //draw command
+
+    VulkanContext::getInstance()->drawEnd();
 
     glfwPollEvents();
 }

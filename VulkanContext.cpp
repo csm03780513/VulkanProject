@@ -52,6 +52,92 @@ void VulkanContext::initVulkan(GLFWwindow* window) {
 	swapChain = new SwapChain();
 	swapChain->create(surface);
 
+	renderPass = new Renderpass();
+	renderPass->createRenderPass(swapChain->swapChainImageFormat);
+
+	renderTarget = new RenderTarget();
+	renderTarget->createViewsAndFramebuffer(swapChain->swapChainImages, swapChain->swapChainImageFormat, swapChain->swapChainImageExtent, renderPass->renderPass);
+
+	drawComBuffer = new DrawCommandBuffer();
+	drawComBuffer->createCommandPoolAndBuffer(swapChain->swapChainImages.size());
+
+
+}
+
+void VulkanContext::drawBegin() {
+
+	vkAcquireNextImageKHR(device->logicalDevice,
+		swapChain->swapChain,
+		std::numeric_limits<uint64_t>::max(),
+		NULL, // is  signaled
+		VK_NULL_HANDLE,
+		&imageIndex);
+
+	curentCommandBuffer = drawComBuffer->commandBuffers[imageIndex];
+
+	// Begin command buffer recording
+	drawComBuffer->beginCommandBuffer(curentCommandBuffer);
+
+	// Begin renderpass
+	VkClearValue clearcolor = { 1.0f, 0.0f, 1.0f, 1.0f };
+
+	std::array<VkClearValue, 1> clearValues = { clearcolor };
+
+	renderPass->beginRenderPass(clearValues,
+		curentCommandBuffer,
+		renderTarget->swapChainFramebuffers[imageIndex],
+		renderTarget->_swapChainImageExtent);
+
+
+}
+
+void VulkanContext::drawEnd() {
+
+	// End render pass commands
+	renderPass->endRenderPass(curentCommandBuffer);
+
+	// End command buffer recording
+	drawComBuffer->endCommandBuffer(curentCommandBuffer);
+
+	// submit command buffer
+	VkSubmitInfo submitInfo = {};
+	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	submitInfo.commandBufferCount = 1;
+	submitInfo.pCommandBuffers = &curentCommandBuffer;
+
+	vkQueueSubmit(device->graphicsQueue, 1, &submitInfo, NULL);
+
+
+	// Present frame
+	VkPresentInfoKHR presentInfo = {};
+	presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+	presentInfo.swapchainCount = 1;
+	presentInfo.pSwapchains = &swapChain->swapChain;
+	presentInfo.pImageIndices = &imageIndex;
+
+	vkQueuePresentKHR(device->presentQueue, &presentInfo);
+	vkQueueWaitIdle(device->presentQueue);
+
+}
+
+
+void VulkanContext::cleanup() {
+
+
+	vkDeviceWaitIdle(device->logicalDevice);
+
+	drawComBuffer->destroy();
+	renderTarget->destroy();
+	renderPass->destroy();
+	swapChain->destroy();
+
+	device->destroy();
+
+	valLayersAndExt->destroy(vInstance->vkInstance, isValidationLayersEnabled);
+
+	vkDestroySurfaceKHR(vInstance->vkInstance, surface, nullptr);
+	vkDestroyInstance(vInstance->vkInstance, nullptr);
+
 }
 
 Device* VulkanContext::getDevice()

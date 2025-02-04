@@ -11,9 +11,9 @@
 #include "Device.h"
 
 #include "SwapChain.h"
-//#include "Renderpass.h"
-//#include "RenderTarget.h"
-//#include "DrawCommandBuffer.h"
+#include "Renderpass.h"
+#include "RenderTarget.h"
+#include "DrawCommandBuffer.h"
 
 #ifdef _DEBUG
 const bool isValidationLayersEnabled = true;
@@ -52,8 +52,8 @@ private:
 	Device* device;
 
 	SwapChain* swapChain;
-	//Renderpass* renderPass;
-	//RenderTarget* renderTarget;
-	//DrawCommandBuffer* drawComBuffer;
+	Renderpass* renderPass;
+	RenderTarget* renderTarget;
+	DrawCommandBuffer* drawComBuffer;
 };
 
