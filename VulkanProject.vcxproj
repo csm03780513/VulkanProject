@@ -134,10 +134,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AppValidationLayersAndExtensions.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Descriptor.cpp" />
     <ClCompile Include="Device.cpp" />
     <ClCompile Include="DrawCommandBuffer.cpp" />
+    <ClCompile Include="GraphicsPipeline.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ObjectBuffers.cpp" />
+    <ClCompile Include="ObjectRenderer.cpp" />
     <ClCompile Include="RenderPass.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="source.cpp" />
@@ -148,10 +152,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppValidationLayersAndExtensions.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Descriptor.h" />
     <ClInclude Include="Device.h" />
     <ClInclude Include="DrawCommandBuffer.h" />
+    <ClInclude Include="GraphicsPipeline.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="ObjectBuffers.h" />
+    <ClInclude Include="ObjectRenderer.h" />
     <ClInclude Include="RenderPass.h" />
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="SwapChain.h" />

@@ -1,36 +1,75 @@
-// VulkanProject.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
 #define GLFW_INCLUDE_VULKAN
 #include<GLFW/glfw3.h>
 
-#include <iostream>
 #include "VulkanContext.h"
+
+#include "Camera.h"
+#include "ObjectRenderer.h"
 
 int main() {
 
-glfwInit();
+	glfwInit();
 
-glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-GLFWwindow* window = glfwCreateWindow(1280, 720, "HELLO VULKAN ", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(1280, 720, "HELLO VULKAN ", nullptr, nullptr);
 
-VulkanContext::getInstance()->initVulkan(window);
+	VulkanContext::getInstance()->initVulkan(window);
 
-while (!glfwWindowShouldClose(window)) {
+	Camera camera;
+	camera.init(45.0f, 1280.0f, 720.0f, 0.1f, 10000.0f);
+	camera.setCameraPosition(glm::vec3(0.0f, 0.0f, 4.0f));
 
-    VulkanContext::getInstance()->drawBegin();
+	ObjectRenderer tri;
+	tri.createObjectRenderer(MeshType::kTriangle,
+		glm::vec3(-1.0f, 1.0f, 0.0f),
+		glm::vec3(0.5f));
 
-    //draw command
+	ObjectRenderer quad;
+	quad.createObjectRenderer(MeshType::kQuad,
+		glm::vec3(1.0f, 1.0f, 0.0f),
+		glm::vec3(0.5f));
 
-    VulkanContext::getInstance()->drawEnd();
+	ObjectRenderer cube;
+	cube.createObjectRenderer(MeshType::kCube,
+		glm::vec3(-1.0f, -1.0f, 0.0f),
+		glm::vec3(0.5f));
 
-    glfwPollEvents();
-}
+	ObjectRenderer sphere;
+	sphere.createObjectRenderer(MeshType::kSphere,
+		glm::vec3(1.0f, -1.0f, 0.0f),
+		glm::vec3(0.5f));
 
-glfwDestroyWindow(window);
-glfwTerminate();
+	while (!glfwWindowShouldClose(window)) {
 
-return 0;
+		VulkanContext::getInstance()->drawBegin();
 
+		// draw command 
+		tri.updateUniformBuffer(camera);
+		quad.updateUniformBuffer(camera);
+		cube.updateUniformBuffer(camera);
+		sphere.updateUniformBuffer(camera);
+
+		tri.draw();
+		quad.draw();
+		cube.draw();
+		sphere.draw();
+
+		VulkanContext::getInstance()->drawEnd();
+
+		glfwPollEvents();
+	}
+
+	tri.destroy();
+	quad.destroy();
+	cube.destroy();
+	sphere.destroy();
+
+	VulkanContext::getInstance()->cleanup();
+
+	glfwDestroyWindow(window);
+	glfwTerminate();
+
+	return 0;
 }

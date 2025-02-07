@@ -2,7 +2,6 @@
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW\glfw3.h>
-//#include <android_native_app_glue.h>
 
 #include <vulkan\vulkan.h>
 
@@ -27,6 +26,7 @@ public:
 
 	static VulkanContext* getInstance();
 	static VulkanContext* instance;
+	Device* device;
 
 	~VulkanContext();
 
@@ -38,10 +38,14 @@ public:
 
 	Device* getDevice();
 
+	SwapChain* getSwapChain();
+	Renderpass* getRenderpass();
+	VkCommandBuffer getCurrentCommandBuffer();
+
 private:
 
 	uint32_t imageIndex = 0;
-	VkCommandBuffer curentCommandBuffer;
+	VkCommandBuffer currentCommandBuffer;
 
 	//surface
 	VkSurfaceKHR surface;
@@ -49,11 +53,17 @@ private:
 	// My Classes
 	AppValidationLayersAndExtensions* valLayersAndExt;
 	VulkanInstance* vInstance;
-	Device* device;
 
 	SwapChain* swapChain;
 	Renderpass* renderPass;
 	RenderTarget* renderTarget;
 	DrawCommandBuffer* drawComBuffer;
+
+
+	const int MAX_FRAMES_IN_FLIGHT = 2;
+	VkSemaphore imageAvailableSemaphore;
+	VkSemaphore renderFinishedSemaphore;
+	std::vector<VkFence> inFlightFences;
+
 };
 
